@@ -3,7 +3,7 @@
   margin: 16px auto 0;
 }
 
-.use-guide__intro {
+.use-guide__lead .use-guide__intro {
   max-width: 720px;
   margin: 18px auto 0;
   color: var(--ink-soft);
@@ -13,7 +13,7 @@
   text-align: center;
 }
 
-.use-guide__intro strong {
+.use-guide__lead .use-guide__intro strong {
   color: var(--amber-strong);
   font-weight: 700;
 }
@@ -69,7 +69,7 @@
     margin: 14px auto 0;
   }
 
-  .use-guide__intro {
+  .use-guide__lead .use-guide__intro {
     width: calc(100% - 72px);
     max-width: 480px;
     margin: 16px auto 0;

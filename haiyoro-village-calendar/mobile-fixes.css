@@ -3,6 +3,10 @@
   margin: 16px auto 0;
 }
 
+.use-guide__body {
+  max-width: 720px;
+}
+
 .use-guide__photo img {
   display: block;
   width: 100%;
@@ -35,25 +39,7 @@
   }
 
   .sync-panel {
-    top: 14px;
-    right: 14px;
-    gap: 6px;
-    padding: 5px;
-    max-width: min(48vw, 208px);
-  }
-
-  .sync-status {
-    max-width: 154px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 10.5px;
-  }
-
-  .sync-panel button {
-    min-height: 32px;
-    padding: 6px 9px;
-    font-size: 12px;
+    display: none;
   }
 
   .toolbar h2 {
@@ -68,6 +54,12 @@
     margin: 14px auto 0;
   }
 
+  .use-guide__body {
+    width: calc(100% - 72px);
+    max-width: 480px;
+    margin: 18px auto 0;
+  }
+
   .week-wrap {
     max-height: min(520px, 60vh);
     overscroll-behavior: contain;
@@ -75,16 +67,6 @@
 }
 
 @media (max-width: 420px) {
-  .sync-panel {
-    top: 10px;
-    right: 10px;
-    max-width: 176px;
-  }
-
-  .sync-status {
-    max-width: 120px;
-  }
-
   .toolbar h2 {
     font-size: 21px;
   }

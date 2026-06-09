@@ -19,6 +19,10 @@
   }
 
   .use-guide__lead h2 {
+    width: calc(100% - 44px);
+    max-width: 520px;
+    margin-right: auto;
+    margin-left: auto;
     font-size: 17px;
     line-height: 1.65;
     font-weight: 800;
@@ -59,8 +63,8 @@
   }
 
   .use-guide__photo {
-    width: calc(100% - 32px);
-    max-width: 520px;
+    width: calc(100% - 72px);
+    max-width: 480px;
     margin: 14px auto 0;
   }
 

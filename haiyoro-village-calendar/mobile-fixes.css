@@ -35,7 +35,7 @@
   }
 
   .week-wrap {
-    max-height: min(620px, 78vh);
+    max-height: min(520px, 60vh);
     overscroll-behavior: contain;
   }
 }

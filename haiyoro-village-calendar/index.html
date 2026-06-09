@@ -11,7 +11,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles.css?v=20260609-2055" />
-    <link rel="stylesheet" href="./mobile-fixes.css?v=20260609-2135" />
+    <link rel="stylesheet" href="./mobile-fixes.css?v=20260609-2150" />
   </head>
   <body>
     <header class="masthead">
@@ -32,8 +32,11 @@
     <main class="app-shell">
       <section class="use-guide" aria-label="ハイよろの使い方">
         <div class="use-guide__lead">
-          <p>「ハイボールの世界によろしく。」の使い方</p>
+          <p>CONCEPT</p>
           <h2>村民のみ入れる、予約制のスナック空間です。</h2>
+          <figure class="use-guide__photo">
+            <img src="./assets/haiyoro-snack-room.jpg" alt="ハイボールの世界によろしく。の店内" loading="lazy" />
+          </figure>
         </div>
         <div class="use-guide__body">
           <p>来店を希望される方は、以下のカレンダーの予約状況を見て、<strong class="use-guide__emphasis">3日前</strong>までに村長（シュント）宛てにLINEにてご連絡ください。最大限のおもてなしの準備をして、お出迎えさせていただきます。</p>
@@ -91,7 +94,8 @@
     <script>
       window.HAIYORO_API_URL = "https://haiyoro.netlify.app/.netlify/functions/calendar";
     </script>
-    <script src="./app.js?v=20260609-2105" defer></script>
+    <script src="./app.js?v=20260609-2225" defer></script>
+    <script src="./closed-day-labels.js?v=20260609-2225" defer></script>
     <script src="./mobile-scroll.js?v=20260609-2105" defer></script>
   </body>
 </html>

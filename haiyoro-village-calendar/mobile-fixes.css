@@ -1,3 +1,18 @@
+.use-guide__photo {
+  max-width: 720px;
+  margin: 16px auto 0;
+}
+
+.use-guide__photo img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 720 / 401;
+  object-fit: cover;
+  border: 1px solid rgba(28, 26, 22, 0.16);
+  border-radius: 6px;
+  box-shadow: 0 16px 32px rgba(28, 26, 22, 0.14);
+}
+
 @media (max-width: 720px) {
   .use-guide__lead h2 {
     font-size: 17px;
@@ -32,6 +47,10 @@
     font-size: 22px;
     line-height: 1.2;
     white-space: nowrap;
+  }
+
+  .use-guide__photo {
+    margin-top: 14px;
   }
 
   .week-wrap {

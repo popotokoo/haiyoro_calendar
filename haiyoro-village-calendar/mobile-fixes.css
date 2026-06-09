@@ -14,11 +14,20 @@
 }
 
 @media (max-width: 720px) {
+  body {
+    overflow-x: hidden;
+  }
+
   .use-guide__lead h2 {
     font-size: 17px;
     line-height: 1.65;
     font-weight: 800;
     letter-spacing: 0;
+  }
+
+  .week-wrap {
+    min-width: 0;
+    max-width: 100%;
   }
 
   .sync-panel {

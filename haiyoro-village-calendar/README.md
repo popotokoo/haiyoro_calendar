@@ -63,14 +63,21 @@
 4. Webアプリとしてデプロイする
    - 実行ユーザー: 自分
    - アクセスできるユーザー: 全員
-5. 発行されたWebアプリURLを [config.js](./config.js) の `window.HAIYORO_API_URL` に入れる
+5. 発行されたWebアプリURLを [netlify/functions/calendar.js](./netlify/functions/calendar.js) の `GOOGLE_SCRIPT_URL` に入れる
+6. [config.js](./config.js) と [index.html](./index.html) の `window.HAIYORO_API_URL` は、Netlify関数のURLを指定する
 
 読み込むカレンダーを増減したい場合は、`CONFIG.CALENDAR_IDS` の配列を変更してください。
 
 設定例:
 
 ```js
-window.HAIYORO_API_URL = "https://script.google.com/macros/s/xxxxxxxx/exec";
+// netlify/functions/calendar.js
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/xxxxxxxx/exec";
+
+// config.js / index.html
+window.HAIYORO_API_URL = "https://haiyoro.netlify.app/.netlify/functions/calendar";
 ```
 
 API URLがない場合はサンプル予定を表示します。
+
+Netlifyで運用する場合、ブラウザからApps Scriptを直接読ませず、`/.netlify/functions/calendar` を経由します。これにより、ブラウザ拡張やGoogle側のリダイレクトで `script.googleusercontent.com` がブロックされる問題を避けます。

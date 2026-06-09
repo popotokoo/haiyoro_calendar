@@ -1,0 +1,1015 @@
+/*
+  夜のハイよろ ── 角ラベル(KAKUBIN) / サントリー角ハイボールの世界観
+  鉄則:
+  - 黄金/クリーム地の上の文字は必ず墨黒(--ink系)。クリーム白字(--fill-ink)は
+    塗りカテゴリ(朱赤/墨/緑/墨グレー)の面の上だけ。薄黄に白字は厳禁。
+  - 黄金(--bg/--gold)は masthead と「今週のイベント」帯だけ。作業域(週グリッド/
+    詳細ペイン)はクリーム(--paper)地+黒罫。
+  - 亀甲は黄金地で不透明度0.11/クリーム地で0.05。密度の高い面には敷かない。
+  - DOM契約・クラス名・data属性・グリッド寸法(62px軸/112px列/64px時)は不変。
+*/
+
+:root {
+  /* 黄金 ── masthead / 今週帯 */
+  --gold: #e8b400;
+  --gold-deep: #d9a100;
+
+  /* ハイボール琥珀 ── today/選択/active のアクセント */
+  --amber: #c8860d;
+  --amber-strong: #a66e08;
+  --amber-wash: rgba(200, 134, 13, 0.1);
+  --amber-glow: rgba(217, 164, 65, 0.42);
+  --amber-dot: #c8860d;
+
+  /* 紙 ── 作業域(クリーム/泡白) */
+  --paper: #fbf6e9;
+  --paper-soft: #f6efdb;
+  --paper-lit: #fffdf5;
+  --paper-deep: #efe6ce;
+
+  /* 墨 */
+  --ink: #1c1a16;
+  --ink-strong: #100e0b;
+  --ink-soft: #3a352b;
+  --muted: #6e6552;
+  --muted-soft: #7c7260;
+
+  /* 罫線 */
+  --line: rgba(28, 26, 22, 0.16);
+  --line-strong: rgba(28, 26, 22, 0.9);
+  --line-hour: rgba(28, 26, 22, 0.07);
+  --line-hour-key: rgba(28, 26, 22, 0.15);
+  --line-warm: rgba(200, 134, 13, 0.5);
+
+  /* カテゴリ(塗り) */
+  --event: #2367a6;       /* イベント = 深めの青 */
+  --event-soft: rgba(35, 103, 166, 0.1);
+  --private: #d65f8b;     /* 貸切 / ビジネス利用 = やわらかいピンク */
+  --private-deep: #a43d65;
+  --flat-haiyoro: #e8b400; /* ふらっと = 角ハイの黄色 */
+  --flat-haiyoro-wash: rgba(232, 180, 0, 0.13);
+  --flat-haiyoro-ink: #1c1a16;
+
+  /* 状態 */
+  --empty: #786b3c;        /* 空き = 枯草(非塗り・左罫+見出し) */
+  --no-vacancy: #5f5a52;   /* 村長不在 = 落ち着いたグレー */
+  --no-vacancy-ink: #fbf6e9;
+  --busy: #4f4a43;         /* 旧：空いていない */
+  --ended: #80796d;         /* 受付終了 = グレー */
+  --ended-line: rgba(128, 121, 109, 0.45);
+  --closed: #736b57;       /* 受付終了 = 最も控えめ */
+  --closed-line: rgba(138, 128, 104, 0.4);
+
+  --fill-ink: #fbf6e9;     /* 塗りカテゴリ上のクリーム白字 */
+
+  /* 角ハイの装飾色 */
+  --seal-red: #c8352b;
+  --lemon-rind: #a8870e;
+
+  --shadow: 0 18px 48px rgba(28, 26, 22, 0.12);
+  --shadow-card: 0 5px 16px rgba(28, 26, 22, 0.06);
+
+  /* 亀甲(六角)タイル ── Hero Patterns系の継ぎ目なしパス。28x49でシームレスにタイル */
+  --kikko-gold: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cpath fill='%231c1a16' fill-opacity='0.11' d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/svg%3E");
+  --kikko-paper: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cpath fill='%231c1a16' fill-opacity='0.05' d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/svg%3E");
+
+  /* レモン輪切り(masthead右下に1点) */
+  --lemon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg opacity='0.92'%3E%3Ccircle cx='60' cy='60' r='57' fill='%23a8870e'/%3E%3Ccircle cx='60' cy='60' r='53' fill='%23e6c200'/%3E%3Ccircle cx='60' cy='60' r='47' fill='%23f4e27a'/%3E%3Cg stroke='%23a8870e' stroke-width='2.5' stroke-linecap='round'%3E%3Cline x1='60' y1='14' x2='60' y2='106'/%3E%3Cline x1='14' y1='60' x2='106' y2='60'/%3E%3Cline x1='27' y1='27' x2='93' y2='93'/%3E%3Cline x1='27' y1='93' x2='93' y2='27'/%3E%3C/g%3E%3Ccircle cx='60' cy='60' r='6.5' fill='%23e6c200'/%3E%3C/g%3E%3C/svg%3E");
+
+  --bubble: rgba(255, 250, 232, 0.72);
+  --bubble-faint: rgba(255, 250, 232, 0.42);
+
+  --font-sans: "Noto Sans JP", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: "Anton", "Noto Sans JP", sans-serif;
+
+  --radius: 2px;
+  --hour-height: 64px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+
+button {
+  font: inherit;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+/* ───────────────────────── masthead (黄金ラベル・写真なし) ───────────────────────── */
+
+.masthead {
+  position: relative;
+  min-height: 380px;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, transparent 86%, var(--paper) 100%),
+    var(--lemon) right -26px bottom -30px / 132px 132px no-repeat,
+    linear-gradient(158deg, var(--gold) 0%, var(--gold-deep) 100%);
+}
+
+/* 亀甲エンボス地紋 */
+.masthead::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: var(--kikko-gold);
+  background-size: 38px 66px;
+  pointer-events: none;
+}
+
+/* 立ち上るソーダの泡 */
+.masthead__shade {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 22% 88%, var(--bubble) 0 2px, transparent 2.6px),
+    radial-gradient(circle at 31% 96%, var(--bubble-faint) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 54% 90%, var(--bubble) 0 2.5px, transparent 3px),
+    radial-gradient(circle at 67% 97%, var(--bubble-faint) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 78% 86%, var(--bubble) 0 2px, transparent 2.6px),
+    radial-gradient(circle at 44% 94%, var(--bubble-faint) 0 1.5px, transparent 2px);
+  animation: haiyoro-rise 13s ease-in-out infinite;
+}
+
+@keyframes haiyoro-rise {
+  0% { transform: translateY(12px); opacity: 0; }
+  22% { opacity: 0.9; }
+  78% { opacity: 0.65; }
+  100% { transform: translateY(-36px); opacity: 0; }
+}
+
+.masthead__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 380px;
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 70px 0 46px;
+  text-align: center;
+  color: var(--ink-strong);
+}
+
+.masthead__inner > div:first-child {
+  position: relative;
+}
+
+.masthead__inner > div:first-child::before {
+  content: "";
+  position: absolute;
+  left: -16%;
+  top: -22%;
+  width: 132%;
+  height: 144%;
+  background: radial-gradient(62% 78% at 50% 50%, var(--amber-glow), transparent 70%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ブランドロゴ＋カレンダーのタグライン */
+.masthead__logo {
+  margin: 0 0 14px;
+  line-height: 0;
+}
+
+.masthead__logo img {
+  display: block;
+  width: auto;
+  height: 200px;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.masthead__tagline {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+
+.toolbar__label,
+.detail-pane__label {
+  margin: 0 0 7px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.sync-panel {
+  position: absolute;
+  top: 22px;
+  right: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: rgba(251, 246, 233, 0.6);
+  backdrop-filter: blur(8px);
+}
+
+.sync-status {
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.sync-status:empty {
+  display: none;
+}
+
+.sync-panel button {
+  padding: 8px 14px;
+  border: 1px solid var(--ink);
+  border-radius: var(--radius);
+  background: var(--ink);
+  color: var(--fill-ink);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.sync-panel button:hover {
+  background: var(--ink-strong);
+}
+
+/* ───────────────────────── layout ───────────────────────── */
+
+.app-shell {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 40px 0 56px;
+}
+
+.use-guide {
+  margin: -4px 0 26px;
+  padding: 6px 2px 22px;
+  border-bottom: 1px solid rgba(28, 26, 22, 0.14);
+}
+
+.use-guide__lead p {
+  margin: 0 0 6px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+
+.use-guide__lead h2 {
+  margin: 0;
+  color: var(--ink-strong);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+  text-align: center;
+}
+
+.use-guide__body {
+  display: grid;
+  gap: 9px;
+  max-width: 760px;
+  margin: 18px auto 0;
+  text-align: center;
+}
+
+.use-guide__body p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 1.7;
+}
+
+.use-guide__body strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.use-guide__body .use-guide__emphasis {
+  color: var(--amber-strong);
+}
+
+.use-guide__question {
+  display: block;
+  margin: 0 0 5px;
+  color: var(--amber-strong);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.use-guide__qa {
+  display: grid;
+  gap: 2px;
+}
+
+.use-guide__answer {
+  margin-right: 4px;
+  color: var(--amber-strong);
+  font-weight: 700;
+}
+
+.use-guide__caption {
+  max-width: 700px;
+  margin: -2px auto 0;
+  color: var(--muted);
+  font-size: 10.5px;
+  line-height: 1.55;
+}
+
+.toolbar {
+  display: grid;
+  grid-template-columns: 42px 1fr 42px auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.toolbar h2 {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 30px;
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--ink-strong);
+}
+
+.toolbar__label,
+.detail-pane__label {
+  color: var(--muted);
+}
+
+.icon-button,
+.ghost-button {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper-soft);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.icon-button:hover,
+.ghost-button:hover {
+  background: var(--paper-lit);
+  border-color: rgba(28, 26, 22, 0.32);
+}
+
+.icon-button {
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  font-size: 28px;
+  line-height: 1;
+}
+
+.ghost-button {
+  height: 42px;
+  padding: 0 18px;
+  font-weight: 600;
+}
+
+.category-strip {
+  display: flex;
+  gap: 10px;
+  padding: 18px 0 20px;
+  overflow-x: auto;
+}
+
+.category-chip {
+  min-height: 34px;
+  flex: 0 0 auto;
+  padding: 7px 13px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper-soft);
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 12.5px;
+  font-weight: 600;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.category-chip:hover {
+  border-color: rgba(28, 26, 22, 0.32);
+}
+
+.category-chip.is-active {
+  color: var(--fill-ink);
+  border-color: transparent;
+}
+
+.category-chip[data-category="貸切"].is-active { background: var(--private); }
+.category-chip[data-category="イベント"].is-active { background: var(--event); }
+.category-chip[data-category="ふらっとハイよろ。"].is-active {
+  background: var(--flat-haiyoro);
+  color: var(--flat-haiyoro-ink);
+}
+.category-chip[data-category="空き"].is-active { background: var(--empty); }
+.category-chip[data-category="村長不在"].is-active { background: var(--no-vacancy); }
+.category-chip[data-category="受付終了"].is-active { background: var(--ended); }
+.category-chip[data-category="空きなし"].is-active { background: var(--no-vacancy); }
+.category-chip[data-category="空いていない"].is-active { background: var(--busy); }
+
+/* ─────────────────── 今週のイベント(黄金の張り紙) ─────────────────── */
+
+.week-highlights {
+  position: relative;
+  display: grid;
+  gap: 12px;
+  margin: 0 0 32px;
+  padding: 20px 24px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background:
+    var(--kikko-gold),
+    linear-gradient(158deg, var(--gold) 0%, var(--gold-deep) 100%);
+  background-size: 38px 66px, auto;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.week-highlights__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.week-highlights__head p {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: var(--ink-strong);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.week-highlights__head span,
+.week-highlights__empty {
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.week-highlights__empty {
+  margin: 0;
+  padding: 8px 0;
+  text-align: center;
+  font-size: 14px;
+}
+
+.week-highlights__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.highlight-card {
+  display: grid;
+  gap: 5px;
+  min-height: 76px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--event);
+  border-radius: var(--radius);
+  background: var(--paper);
+  box-shadow: var(--shadow-card);
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+  transition: box-shadow 0.15s ease, border-left-width 0.15s ease;
+}
+
+.highlight-card:hover {
+  border-left-width: 6px;
+  box-shadow: 0 10px 24px rgba(28, 26, 22, 0.14);
+}
+
+.highlight-card strong {
+  overflow: hidden;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.highlight-card span {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ───────────────────────── 週グリッド(クリームの紙) ───────────────────────── */
+
+.content-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 330px;
+  gap: 26px;
+  align-items: start;
+}
+
+.week-wrap,
+.detail-pane {
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+
+.week-wrap {
+  overflow: auto;
+}
+
+.week-header-row,
+.week-body {
+  display: grid;
+  grid-template-columns: 62px minmax(820px, 1fr);
+}
+
+.week-header-row {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper-deep);
+}
+
+.time-spacer {
+  border-right: 1px solid var(--line);
+}
+
+.week-headers,
+.week-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(112px, 1fr));
+}
+
+.week-day-header {
+  display: grid;
+  gap: 4px;
+  min-height: 62px;
+  padding: 10px;
+  border: 0;
+  border-right: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+}
+
+.week-day-header:last-child {
+  border-right: 0;
+}
+
+.week-day-header span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.week-day-header strong {
+  font-size: 23px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.week-day-header.is-today strong {
+  display: inline-block;
+  padding-bottom: 1px;
+  border-bottom: 2px solid var(--amber);
+  color: var(--amber-strong);
+}
+
+.week-day-header.is-selected {
+  background: var(--amber-wash);
+}
+
+.time-rail {
+  position: relative;
+  min-height: calc((24 - 10) * var(--hour-height));
+  border-right: 1px solid var(--line);
+  background: var(--paper-deep);
+}
+
+.time-mark {
+  position: absolute;
+  right: 10px;
+  color: var(--muted);
+  font-size: 10.5px;
+  font-weight: 500;
+  transform: translateY(-50%);
+}
+
+.week-grid {
+  min-height: calc((24 - 10) * var(--hour-height));
+}
+
+.week-day-column {
+  position: relative;
+  min-height: calc((24 - 10) * var(--hour-height));
+  border-right: 1px solid var(--line);
+  background:
+    repeating-linear-gradient(to bottom, transparent 0, transparent 63px, var(--line-hour) 63px, var(--line-hour) 64px),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 191px, var(--line-hour-key) 191px, var(--line-hour-key) 192px),
+    var(--kikko-paper),
+    var(--paper);
+  background-size: auto, auto, 36px 63px, auto;
+  cursor: pointer;
+}
+
+.week-day-column:last-child {
+  border-right: 0;
+}
+
+/* 金曜＝ふらっと開催日の歓迎地色 */
+.week-day-column[data-weekday="5"] {
+  background:
+    linear-gradient(var(--flat-haiyoro-wash), var(--flat-haiyoro-wash)),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 63px, var(--line-hour) 63px, var(--line-hour) 64px),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 191px, var(--line-hour-key) 191px, var(--line-hour-key) 192px),
+    var(--kikko-paper),
+    var(--paper);
+  background-size: auto, auto, auto, 36px 63px, auto;
+}
+
+.week-day-column.is-today {
+  background:
+    linear-gradient(var(--amber-wash), var(--amber-wash)),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 63px, var(--line-hour) 63px, var(--line-hour) 64px),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 191px, var(--line-hour-key) 191px, var(--line-hour-key) 192px),
+    var(--kikko-paper),
+    var(--paper);
+  background-size: auto, auto, auto, 36px 63px, auto;
+  border-top: 2px solid var(--amber);
+}
+
+.week-day-column.is-today[data-weekday="5"] {
+  background:
+    linear-gradient(var(--amber-wash), var(--amber-wash)),
+    linear-gradient(var(--flat-haiyoro-wash), var(--flat-haiyoro-wash)),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 63px, var(--line-hour) 63px, var(--line-hour) 64px),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 191px, var(--line-hour-key) 191px, var(--line-hour-key) 192px),
+    var(--kikko-paper),
+    var(--paper);
+  background-size: auto, auto, auto, auto, 36px 63px, auto;
+  border-top: 2px solid var(--amber);
+}
+
+.week-day-column.is-selected {
+  box-shadow: inset 0 0 0 2px var(--amber-strong);
+}
+
+.week-event {
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  display: grid;
+  gap: 3px;
+  align-content: start;
+  min-height: 46px;
+  padding: 7px 9px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-left: 4px solid currentColor;
+  border-radius: var(--radius);
+  background: var(--paper-soft);
+  box-shadow: var(--shadow-card);
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+}
+
+.week-event strong {
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.week-event span {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 非塗りカテゴリ＝色は左罫＋見出しに */
+.week-event[data-category="空き"] { color: var(--empty); }
+.week-event[data-category="イベント"] { color: var(--event); }
+.week-event[data-category="貸切"] { color: var(--private); }
+.week-event[data-category="ふらっとハイよろ。"] { color: var(--flat-haiyoro); }
+.week-event[data-category="村長不在"] { color: var(--no-vacancy); }
+.week-event[data-category="受付終了"] { color: var(--ended); }
+.week-event[data-category="空きなし"] { color: var(--no-vacancy); }
+.week-event[data-category="空いていない"] { color: var(--busy); }
+
+/* 塗りカテゴリ */
+.week-event[data-category="イベント"],
+.week-event[data-category="貸切"],
+.week-event[data-category="ふらっとハイよろ。"] {
+  border-color: rgba(251, 246, 233, 0.22);
+  color: var(--fill-ink);
+}
+
+.week-event[data-category="イベント"] { background: var(--event); }
+.week-event[data-category="貸切"] { background: var(--private); }
+.week-event[data-category="ふらっとハイよろ。"] {
+  border-color: rgba(28, 26, 22, 0.26);
+  border-left-color: var(--amber-strong);
+  background: var(--flat-haiyoro);
+  color: var(--flat-haiyoro-ink);
+}
+
+.week-event[data-category="イベント"] span,
+.week-event[data-category="貸切"] span {
+  color: rgba(251, 246, 233, 0.82);
+}
+
+.week-event[data-category="ふらっとハイよろ。"] span {
+  color: rgba(28, 26, 22, 0.72);
+}
+
+/* ふらっと枠だけに灯る合図 */
+.week-event[data-category="ふらっとハイよろ。"]::after {
+  content: "";
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--amber-dot);
+  box-shadow: 0 0 0 2px rgba(251, 246, 233, 0.35);
+}
+
+/* 村長不在＝個人カレンダー都合のグレー */
+.week-event[data-category="村長不在"],
+.week-event[data-category="空きなし"] {
+  border-color: rgba(251, 246, 233, 0.4);
+  border-left-color: rgba(251, 246, 233, 0.85);
+  background: var(--no-vacancy);
+  color: var(--no-vacancy-ink);
+}
+
+.week-event[data-category="村長不在"] span,
+.week-event[data-category="空きなし"] span {
+  color: rgba(251, 246, 233, 0.8);
+}
+
+/* 空いていない＝さらに暗い塗り(空きなしと明度で階段差) */
+.week-event[data-category="空いていない"] {
+  border-color: rgba(251, 246, 233, 0.16);
+  border-left-color: rgba(251, 246, 233, 0.6);
+  background: var(--busy);
+  color: var(--no-vacancy-ink);
+}
+
+.week-event[data-category="空いていない"] span {
+  color: rgba(251, 246, 233, 0.72);
+}
+
+/* 受付終了＝グレー系 */
+.week-event[data-category="受付終了"] {
+  border-color: var(--closed-line);
+  border-left-color: var(--closed-line);
+  background: #e0dbd2;
+  box-shadow: none;
+  color: var(--ended);
+}
+
+.week-event[data-category="受付終了"] span {
+  color: rgba(87, 82, 74, 0.82);
+}
+
+/* ───────────────────────── 詳細ペイン ───────────────────────── */
+
+.detail-pane {
+  position: sticky;
+  top: 18px;
+  padding: 24px;
+}
+
+.detail-pane h3 {
+  margin: 0 0 15px;
+  font-family: var(--font-sans);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--ink-strong);
+}
+
+.selected-events {
+  display: grid;
+  gap: 16px;
+}
+
+.empty-detail {
+  margin: 0;
+  padding: 8px 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.detail-event {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper-soft);
+}
+
+.detail-event__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.detail-event h4 {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.tag {
+  flex: 0 0 auto;
+  padding: 4px 8px;
+  border-radius: var(--radius);
+  color: var(--fill-ink);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.tag[data-category="貸切"] { background: var(--private); }
+.tag[data-category="イベント"] { background: var(--event); }
+.tag[data-category="ふらっとハイよろ。"] {
+  background: var(--flat-haiyoro);
+  color: var(--flat-haiyoro-ink);
+}
+.tag[data-category="空き"] { background: var(--empty); }
+.tag[data-category="村長不在"] { background: var(--no-vacancy); }
+.tag[data-category="受付終了"] { background: var(--ended); }
+.tag[data-category="空きなし"] { background: var(--no-vacancy); }
+.tag[data-category="空いていない"] { background: var(--busy); }
+
+
+.detail-meta {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.people {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.person {
+  padding: 5px 8px;
+  border-radius: var(--radius);
+  background: rgba(28, 26, 22, 0.06);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.memo {
+  margin: 10px 0 0;
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+/* ───────────────────────── レスポンシブ ───────────────────────── */
+
+@media (max-width: 960px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-pane {
+    position: static;
+  }
+}
+
+@media (max-width: 720px) {
+  .masthead__inner,
+  .app-shell {
+    width: min(100% - 24px, 1180px);
+  }
+
+  .masthead,
+  .masthead__inner {
+    min-height: 270px;
+  }
+
+  .masthead__inner {
+    padding: 62px 0 28px;
+  }
+
+  .masthead__logo img {
+    height: 120px;
+  }
+
+  .masthead__tagline {
+    font-size: 13px;
+  }
+
+  .use-guide {
+    margin-bottom: 20px;
+    padding: 8px 4px 18px;
+  }
+
+  .use-guide__lead h2 {
+    font-size: 15px;
+  }
+
+  .use-guide__body {
+    gap: 10px;
+    margin-top: 16px;
+    text-align: left;
+  }
+
+  .use-guide__body p {
+    font-size: 12px;
+  }
+
+  .use-guide__body .use-guide__caption {
+    font-size: 10.5px;
+    line-height: 1.55;
+  }
+
+  .sync-panel {
+    top: 16px;
+  }
+
+  .toolbar {
+    grid-template-columns: 40px 1fr 40px;
+  }
+
+  .toolbar h2 {
+    font-size: 26px;
+  }
+
+  .ghost-button {
+    grid-column: 1 / -1;
+  }
+
+  .week-event {
+    left: 4px;
+    right: 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+
+  .masthead__shade {
+    animation: none;
+  }
+}

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ハイボールの世界によろしく。｜村人カレンダー</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css?v=20260609-1800" />
+  </head>
+  <body>
+    <header class="masthead">
+      <div class="masthead__shade"></div>
+      <div class="masthead__inner">
+        <div class="masthead__brand">
+          <h1 class="masthead__logo">
+            <img src="./assets/haiyoro-logo.png" alt="ハイボールの世界によろしく。" />
+          </h1>
+        </div>
+        <div class="sync-panel" aria-live="polite">
+          <span id="dataSource" class="sync-status"></span>
+          <button id="syncButton" type="button">更新</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="app-shell">
+      <section class="use-guide" aria-label="ハイよろの使い方">
+        <div class="use-guide__lead">
+          <p>「ハイボールの世界によろしく。」の使い方</p>
+          <h2>村民のみ入れる、予約制のスナック空間です。</h2>
+        </div>
+        <div class="use-guide__body">
+          <p>来店を希望される方は、以下のカレンダーの予約状況を見て、<strong class="use-guide__emphasis">3日前</strong>までに村長（シュント）宛てにLINEにてご連絡ください。最大限のおもてなしの準備をして、お出迎えさせていただきます。</p>
+          <div class="use-guide__qa">
+            <p><span class="use-guide__question">Q. 当日予約なしで行けないの？</span></p>
+            <p><span class="use-guide__answer">A.</span><strong>毎週金曜日</strong>の19:00から24:00は、予約なしで当日ふらっと立ち寄れる「ふらっと、ハイよろ。」として開放しております。</p>
+          </div>
+          <p class="use-guide__caption">※ 状況次第で解放してない場合もありますので、来られる際は事前にLINEでご連絡ください。</p>
+        </div>
+      </section>
+
+      <section class="toolbar" aria-label="週の切り替え">
+        <button id="prevWeek" class="icon-button" type="button" aria-label="前の週">‹</button>
+        <div>
+          <h2 id="weekLabel">2026年6月8日-14日</h2>
+        </div>
+        <button id="nextWeek" class="icon-button" type="button" aria-label="次の週">›</button>
+        <button id="todayButton" class="ghost-button" type="button">今日</button>
+      </section>
+
+      <section class="category-strip" aria-label="表示カテゴリ">
+        <button class="category-chip is-active" data-category="イベント" type="button">イベント</button>
+        <button class="category-chip is-active" data-category="貸切" type="button">予約あり</button>
+        <button class="category-chip is-active" data-category="ふらっとハイよろ。" type="button">ふらっとハイよろ。</button>
+      </section>
+
+      <section class="week-highlights" aria-label="今週のイベント">
+        <div class="week-highlights__head">
+          <p>今週のイベント</p>
+          <span id="weekHighlightsRange"></span>
+        </div>
+        <div id="weekHighlights" class="week-highlights__list"></div>
+      </section>
+
+      <section class="content-grid">
+        <div class="week-wrap" aria-label="週間カレンダー">
+          <div class="week-header-row">
+            <div class="time-spacer"></div>
+            <div id="weekHeaders" class="week-headers"></div>
+          </div>
+          <div class="week-body">
+            <div id="timeRail" class="time-rail" aria-hidden="true"></div>
+            <div id="weekGrid" class="week-grid"></div>
+          </div>
+        </div>
+
+        <aside class="detail-pane">
+          <p class="detail-pane__label">選択中</p>
+          <h3 id="selectedDateLabel">今日</h3>
+          <div id="selectedEvents" class="selected-events"></div>
+        </aside>
+      </section>
+    </main>
+
+    <script src="./config.js"></script>
+    <script src="./app.js?v=20260609-1800" defer></script>
+  </body>
+</html>

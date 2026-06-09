@@ -1,2 +1,3 @@
 [build]
   publish = "haiyoro-village-calendar"
+  functions = "haiyoro-village-calendar/netlify/functions"

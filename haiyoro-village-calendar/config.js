@@ -1,1 +1,1 @@
-window.HAIYORO_API_URL = "https://script.google.com/macros/s/AKfycbxp21OkU7FiFvYbs3ys4nogT7LrA-buIWCodCUkX3YniHH_SFUn5Yt1W4KZToIWHAZi/exec";
+window.HAIYORO_API_URL = "https://script.google.com/macros/s/AKfycbyhPGRwPceq-LxoEbkSmUeXig9L_SASE1FxzJgfP_x41ofwte9MeCab_i89n7ZYlDHu/exec";

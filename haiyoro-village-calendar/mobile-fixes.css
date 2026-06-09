@@ -33,6 +33,11 @@
     line-height: 1.2;
     white-space: nowrap;
   }
+
+  .week-wrap {
+    max-height: min(620px, 78vh);
+    overscroll-behavior: contain;
+  }
 }
 
 @media (max-width: 420px) {

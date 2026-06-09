@@ -3,6 +3,21 @@
   margin: 16px auto 0;
 }
 
+.use-guide__intro {
+  max-width: 720px;
+  margin: 18px auto 0;
+  color: var(--ink-soft);
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 1.7;
+  text-align: center;
+}
+
+.use-guide__intro strong {
+  color: var(--amber-strong);
+  font-weight: 700;
+}
+
 .use-guide__body {
   max-width: 720px;
 }
@@ -52,6 +67,14 @@
     width: calc(100% - 72px);
     max-width: 480px;
     margin: 14px auto 0;
+  }
+
+  .use-guide__intro {
+    width: calc(100% - 72px);
+    max-width: 480px;
+    margin: 16px auto 0;
+    font-size: 12px;
+    text-align: left;
   }
 
   .use-guide__body {
